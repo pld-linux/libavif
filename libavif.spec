@@ -9,13 +9,13 @@
 Summary:	Library for encoding and decoding .avif files
 Summary(pl.UTF-8):	Biblioteka do kodowania i dekodowania plików .avif
 Name:		libavif
-Version:	0.9.2
+Version:	0.10.0
 Release:	1
 License:	BSD
 Group:		Libraries
 #Source0Download: https://github.com/AOMediaCodec/libavif/releases
 Source0:	https://github.com/AOMediaCodec/libavif/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	e7a0f29f783b9734c6c4aa21ecc3007e
+# Source0-md5:	42e783d32c8d5ae2d763edccebcc63a5
 URL:		https://github.com/AOMediaCodec/libavif
 %{?with_aom:BuildRequires:	aom-devel}
 BuildRequires:	cmake >= 3.5
@@ -24,6 +24,7 @@ BuildRequires:	gcc >= 5:3.2
 %{?with_libgav1:BuildRequires:	libgav1-devel}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
+# 1813+ preferred
 BuildRequires:	libyuv-devel >= 0.1755
 %{?with_rav1e:BuildRequires:	rav1e-devel}
 BuildRequires:	rpmbuild(macros) >= 1.745
@@ -85,7 +86,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc CHANGELOG.md LICENSE README.md
 %attr(755,root,root) %{_libdir}/libavif.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libavif.so.12
+%attr(755,root,root) %ghost %{_libdir}/libavif.so.14
 
 %files devel
 %defattr(644,root,root,755)
