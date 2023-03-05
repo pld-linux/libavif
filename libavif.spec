@@ -9,23 +9,25 @@
 Summary:	Library for encoding and decoding .avif files
 Summary(pl.UTF-8):	Biblioteka do kodowania i dekodowania plików .avif
 Name:		libavif
-Version:	0.10.0
+Version:	0.11.1
 Release:	1
 License:	BSD
 Group:		Libraries
 #Source0Download: https://github.com/AOMediaCodec/libavif/releases
 Source0:	https://github.com/AOMediaCodec/libavif/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	42e783d32c8d5ae2d763edccebcc63a5
+# Source0-md5:	dde524dfc0e0e37a468277b128662990
 URL:		https://github.com/AOMediaCodec/libavif
 %{?with_aom:BuildRequires:	aom-devel}
-BuildRequires:	cmake >= 3.5
+BuildRequires:	cmake >= 3.13
 %{?with_dav1d:BuildRequires:	dav1d-devel}
 BuildRequires:	gcc >= 5:3.2
 %{?with_libgav1:BuildRequires:	libgav1-devel}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
+BuildRequires:	libsharpyuv-devel
 # 1813+ preferred
 BuildRequires:	libyuv-devel >= 0.1755
+BuildRequires:	pandoc
 %{?with_rav1e:BuildRequires:	rav1e-devel}
 BuildRequires:	rpmbuild(macros) >= 1.745
 %{?with_svtav1:BuildRequires:	svt-av1-devel}
@@ -54,21 +56,33 @@ Header files for libavif library.
 %description devel -l pl.UTF-8
 Pliki nagłówkowe biblioteki libavif.
 
+%package tools
+Summary:	Tools to encode and decode AVIF files
+Summary(pl.UTF-8):	Narzędzia do kodowania i dekodowania plików AVIF
+Group:		Applications/Multimedia
+Requires:	%{name} = %{version}-%{release}
+
+%description tools
+Tools to encode and decode AVIF files.
+
+%description tools -l pl.UTF-8
+Narzędzia do kodowania i dekodowania plików AVIF.
+
 %prep
 %setup -q
 
 %build
-install -d build
-cd build
-%cmake .. \
+%cmake -B build \
 	-DCMAKE_INSTALL_LIBDIR=%{_lib} \
+	-DAVIF_BUILD_APPS=ON \
+	-DAVIF_BUILD_MAN_PAGES=ON \
 	%{?with_aom:-DAVIF_CODEC_AOM=ON} \
 	%{?with_dav1d:-DAVIF_CODEC_DAV1D=ON} \
 	%{?with_libgav1:-DAVIF_CODEC_LIBGAV1=ON} \
 	%{?with_rav1e:-DAVIF_CODEC_RAV1E=ON} \
 	%{?with_svtav1:-DAVIF_CODEC_SVT=ON}
 
-%{__make}
+%{__make} -C build
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -86,7 +100,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc CHANGELOG.md LICENSE README.md
 %attr(755,root,root) %{_libdir}/libavif.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libavif.so.14
+%attr(755,root,root) %ghost %{_libdir}/libavif.so.15
 
 %files devel
 %defattr(644,root,root,755)
@@ -94,3 +108,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/avif
 %{_pkgconfigdir}/libavif.pc
 %{_libdir}/cmake/libavif
+
+%files tools
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/avifdec
+%attr(755,root,root) %{_bindir}/avifenc
+%{_mandir}/man1/avifdec.1*
+%{_mandir}/man1/avifenc.1*
