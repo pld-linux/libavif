@@ -1,6 +1,7 @@
 #
 # Conditional build:
 %bcond_without	aom		# AOM for encoding/decoding
+%bcond_without	man		# don't build man pages
 %bcond_with	dav1d		# dav1d for decoding
 %bcond_with	libgav1		# libgav1 for decoding
 %bcond_with	rav1e		# rav1e for encoding
@@ -27,7 +28,7 @@ BuildRequires:	libpng-devel
 BuildRequires:	libsharpyuv-devel
 # 1813+ preferred
 BuildRequires:	libyuv-devel >= 0.1755
-BuildRequires:	pandoc
+%{?with_man:BuildRequires:	pandoc}
 %{?with_rav1e:BuildRequires:	rav1e-devel}
 BuildRequires:	rpmbuild(macros) >= 1.745
 %{?with_svtav1:BuildRequires:	svt-av1-devel}
@@ -75,7 +76,7 @@ Narzędzia do kodowania i dekodowania plików AVIF.
 %cmake -B build \
 	-DCMAKE_INSTALL_LIBDIR=%{_lib} \
 	-DAVIF_BUILD_APPS=ON \
-	-DAVIF_BUILD_MAN_PAGES=ON \
+	%{cmake_on_off man AVIF_BUILD_MAN_PAGES} \
 	%{?with_aom:-DAVIF_CODEC_AOM=ON} \
 	%{?with_dav1d:-DAVIF_CODEC_DAV1D=ON} \
 	%{?with_libgav1:-DAVIF_CODEC_LIBGAV1=ON} \
@@ -113,5 +114,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/avifdec
 %attr(755,root,root) %{_bindir}/avifenc
+%if %{with man}
 %{_mandir}/man1/avifdec.1*
 %{_mandir}/man1/avifenc.1*
+%endif
