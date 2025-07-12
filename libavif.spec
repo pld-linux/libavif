@@ -12,7 +12,7 @@ Summary:	Library for encoding and decoding .avif files
 Summary(pl.UTF-8):	Biblioteka do kodowania i dekodowania plików .avif
 Name:		libavif
 Version:	1.2.0
-Release:	1
+Release:	2
 License:	BSD
 Group:		Libraries
 #Source0Download: https://github.com/AOMediaCodec/libavif/releases
